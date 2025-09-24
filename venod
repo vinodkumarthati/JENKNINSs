@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+  triggers { pollSCM('H/5 * * * *') }  
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+    stage('Check Local Website') {
+      steps {
+        script {
+          def code = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:9090/health", returnStdout: true).trim()
+          if (code != "200") {
+            error("Local website not responding (HTTP ${code})")
+          }
+        }
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'echo "Running build on MacBook..."'
+        sh './gradlew build'   
+      }
+    }
+  }
+}
