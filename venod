@@ -17,7 +17,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'echo "Running build on MacBook..."'
+        sh 'echo "Running build ..."'
         sh './gradlew build'   
       }
     }
